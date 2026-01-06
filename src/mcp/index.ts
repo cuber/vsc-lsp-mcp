@@ -8,7 +8,7 @@ import { addLspTools } from './tools'
 
 export function startMcp() {
   const config = workspace.getConfiguration('lsp-mcp')
-  const isMcpEnabled = config.get('enabled', true)
+  const isMcpEnabled = config.get('enabled', false)
   const mcpPort = config.get('port', 9527)
   const maxRetries = config.get('maxRetries', 10)
 
@@ -19,7 +19,6 @@ export function startMcp() {
   const exposeHeadersStr: string = config.get('cors.exposeHeaders', 'Mcp-Session-Id')
 
   if (!isMcpEnabled) {
-    window.showInformationMessage('LSP MCP server is disabled by configuration.')
     return
   }
   const app = express()
