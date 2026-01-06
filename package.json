@@ -36,8 +36,8 @@
       "properties": {
         "lsp-mcp.enabled": {
           "type": "boolean",
-          "default": true,
-          "description": "Enable or disable the LSP MCP server."
+          "default": false,
+          "description": "Enable or disable the LSP MCP server. Disabled by default, add to .vscode/settings.json to enable."
         },
         "lsp-mcp.port": {
           "type": "number",
