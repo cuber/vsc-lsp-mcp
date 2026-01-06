@@ -76,7 +76,7 @@
     "build": "tsup",
     "dev": "tsup --watch --sourcemap",
     "lint": "eslint src --fix",
-    "vscode:prepublish": "pnpm build",
+    "vscode:prepublish": "npm run build",
     "publish": "vsce publish --no-dependencies",
     "vsix": "vsce package --no-dependencies",
     "typecheck": "tsc --noEmit"
