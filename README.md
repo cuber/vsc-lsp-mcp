@@ -63,6 +63,25 @@ This extension bridges that gap, providing AI tools with the same code intellige
 
 <!-- configs -->
 
+## 📦 Installation (From Source)
+
+Since this extension is not yet published to the marketplace, you need to build and install it from source:
+
+```bash
+# Clone the repository
+git clone https://github.com/beixiyo/vsc-lsp-mcp.git
+cd vsc-lsp-mcp
+
+# Install dependencies
+pnpm install
+
+# Build the .vsix package
+pnpm run vsix
+
+# Install the extension in VSCode
+code --install-extension lsp-mcp-*.vsix
+```
+
 ## 🔗 Integration with AI Tools
 
 ### Cursor
@@ -88,6 +107,66 @@ This extension bridges that gap, providing AI tools with the same code intellige
       "type": "streamable-http",
       "url": "http://127.0.0.1:9527/mcp",
       "disabled": false
+    }
+  }
+}
+```
+
+## 📱 Xcode Project Setup
+
+For C/C++/Objective-C projects in Xcode, you need to generate `compile_commands.json` for clangd to work properly.
+
+### 1. Install Prerequisites
+
+```bash
+# Install rbenv and latest Ruby
+brew install rbenv
+rbenv install $(rbenv install -l | grep -v - | tail -1)
+rbenv global $(rbenv install -l | grep -v - | tail -1)
+
+# Install xcpretty
+gem install xcpretty
+```
+
+### 2. Generate compile_commands.json
+
+```bash
+# Replace TestClang with your scheme name
+xcodebuild -scheme TestClang -sdk "iphonesimulator" -arch x86_64 | xcpretty -r json-compilation-database -o compile_commands.json
+```
+
+### 3. Configure VSCode
+
+Create `.vscode/settings.json` in your project root:
+
+```json
+{
+  "clangd.path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clangd",
+  "clangd.arguments": [
+    "--background-index",
+    "--compile-commands-dir=${workspaceFolder}",
+    "--header-insertion=never",
+    "--clang-tidy"
+  ],
+  "lsp-mcp.enabled": true,
+  "lsp-mcp.port": 9528
+}
+```
+
+### 4. Install Extensions
+
+- Install [clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) extension
+- Install LSP MCP extension (see [Installation from Source](#-installation-from-source) above)
+
+### 5. Connect AI Tools
+
+After opening your Xcode project in VSCode, the MCP server will start on port 9528. Configure your AI tool:
+
+```json
+{
+  "mcpServers": {
+    "lsp": {
+      "url": "http://127.0.0.1:9528/mcp"
     }
   }
 }
